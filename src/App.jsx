@@ -93,6 +93,29 @@ function App() {
   const [highContrast, setHighContrast] = useState(false);
   const [activeDoc, setActiveDoc] = useState('Quick start');
 
+  // Update the date, greeting and clock automatically in the visitor's local timezone.
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const refreshClock = () => setNow(new Date());
+    const timer = window.setInterval(refreshClock, 1000);
+    window.addEventListener('focus', refreshClock);
+    document.addEventListener('visibilitychange', refreshClock);
+    return () => {
+      window.clearInterval(timer);
+      window.removeEventListener('focus', refreshClock);
+      document.removeEventListener('visibilitychange', refreshClock);
+    };
+  }, []);
+  const hour = now.getHours();
+  const greeting = hour >= 5 && hour < 12 ? 'Good morning'
+    : hour >= 12 && hour < 17 ? 'Good afternoon'
+    : hour >= 17 && hour < 21 ? 'Good evening'
+    : 'Good night';
+  const greetingEmoji = hour >= 5 && hour < 12 ? '☀️'
+    : hour >= 12 && hour < 17 ? '🌤️'
+    : hour >= 17 && hour < 21 ? '🌆'
+    : '🌙';
+
   useEffect(() => { store('ids-theme', theme); }, [theme]);
   useEffect(() => { store('ids-accent', accent); }, [accent]);
   useEffect(() => { store('ids-radius', radius); }, [radius]);
@@ -150,7 +173,7 @@ function App() {
 
       <main className="main-content">
         {page === 'overview' && <>
-          <div className="welcome-line"><div><p className="breadcrumb-eyebrow">{new Date().toLocaleDateString('en-IN', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }).toUpperCase()} <span>·</span> YOUR CREATIVE WORKSPACE</p><h1>Good evening, Vivek <span className="wave">✳</span></h1><p>Here’s what’s happening in your design system.</p></div><div className="header-version"><span className="status-dot"/> Version 1.0.0 <ChevronDown size={13}/></div></div>
+          <div className="welcome-line"><div><p className="breadcrumb-eyebrow">{now.toLocaleDateString('en-IN', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }).toUpperCase()} <span>·</span> YOUR CREATIVE WORKSPACE <span>·</span> <time className="welcome-clock" dateTime={now.toISOString()} title="Your device’s local time">LOCAL TIME {now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })}</time></p><h1>{greeting}, Vivek <span className="wave" role="img" aria-label={greeting.toLowerCase()}>{greetingEmoji}</span></h1><p>Here’s what’s happening in your design system.</p></div><div className="header-version"><span className="status-dot"/> Version 1.0.0 <ChevronDown size={13}/></div></div>
           <div className="hero-card"><div className="hero-glow hero-glow-one"/><div className="hero-glow hero-glow-two"/><div className="hero-content"><span className="hero-pill"><span/> UI SYSTEM · SUMMER INTERNSHIP 2026</span><h2>Design once.<br/><em>Build beautifully, everywhere.</em></h2><p>A thoughtfully crafted React design system. Explore components, create consistent interfaces, and bring ideas to life.</p><div className="hero-actions"><button className="btn hero-cta" onClick={() => go('components')}>Explore components <ArrowRight size={16}/></button><button className="hero-link" onClick={() => go('templates')}>View templates <ArrowUpRight size={16}/></button></div></div><div className="hero-illustration" aria-hidden="true"><div className="hero-ill-card hero-ill-back"><span className="ill-small-label">STYLE FOUNDATION</span><div className="ill-swatches"><i/><i/><i/><i/></div><div className="ill-line"/><div className="ill-line short"/></div><div className="hero-ill-card hero-ill-front"><div className="ill-card-top"><span className="ill-circle"/><span className="ill-line-short"/><span className="ill-dots">•••</span></div><div className="ill-gradient-square"><Sparkles size={35}/></div><div className="ill-big-line"/><div className="ill-medium-line"/><div className="ill-buttons"><span/><span/></div></div><div className="ill-floating-badge"><CheckCircle2 size={16}/> All systems ready</div><span className="ill-star star-one">✦</span><span className="ill-star star-two">✧</span></div></div>
           <div className="stat-grid"><div className="stat-card"><IconTile icon={Component} tone="purple"/><div className="stat-meta">Total components <span className="stat-positive">+ Ready</span></div><div className="stat-value">16 <span>components</span></div><div className="stat-note">8 component categories</div></div><div className="stat-card"><IconTile icon={LayoutTemplate} tone="blue"/><div className="stat-meta">Page templates <span className="stat-positive">Live</span></div><div className="stat-value">03 <span>templates</span></div><div className="stat-note">Responsive examples</div></div><div className="stat-card"><IconTile icon={Palette} tone="orange"/><div className="stat-meta">Theme presets <span className="stat-positive">Customizable</span></div><div className="stat-value">05 <span>palettes</span></div><div className="stat-note">With light & dark mode</div></div><div className="stat-card"><IconTile icon={ShieldCheck} tone="green"/><div className="stat-meta">Accessibility <span className="stat-positive">Built in</span></div><div className="stat-value"><span className="large-word">A11y</span></div><div className="stat-note">Semantic UI practices</div></div></div>
           <div className="overview-lower"><Panel className="featured-components"><div className="panel-header"><div><h3>Explore the library</h3><p>Handcrafted elements, ready to interact.</p></div><button className="inline-link" onClick={() => go('components')}>View all <ArrowRight size={15}/></button></div><div className="featured-grid"><div className="featured-demo"><div className="mini-overline"><span>01</span> ACTIONS</div><button className="btn btn-primary" onClick={() => notify('Button interaction works!', 'success')}>Get started <ArrowRight size={15}/></button><span className="mini-demo-name">Buttons <ArrowUpRight size={13}/></span></div><div className="featured-demo"><div className="mini-overline"><span>02</span> FORMS</div><label htmlFor="featured-email" className="sr-only">Example email</label><input id="featured-email" className="featured-input" placeholder="your@email.com" type="email"/><span className="mini-demo-name">Inputs <ArrowUpRight size={13}/></span></div><div className="featured-demo"><div className="mini-overline"><span>03</span> DISPLAY</div><span className="badge badge-success"><span className="badge-dot"/> Active status</span><span className="mini-demo-name">Badges <ArrowUpRight size={13}/></span></div></div></Panel>
