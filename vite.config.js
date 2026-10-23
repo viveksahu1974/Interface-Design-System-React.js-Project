@@ -1,8 +1,11 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-export default defineConfig({
+// Use root locally, and the correct repository subpath on GitHub Pages.
+export default defineConfig(({ command }) => ({
   plugins: [react()],
-  base: './',
+  base: command === 'build'
+    ? '/Interface-Design-System-React.js-Project/'
+    : '/',
   server: { port: 5173 },
-});
+}));
