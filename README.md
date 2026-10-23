@@ -55,7 +55,7 @@ Example prompt to your connected coding agent: *"Use Archify to create an archit
 
 | Area | Functional features |
 |---|---|
-| Dashboard overview | Interactive component samples, stats, workspace settings |
+| Dashboard overview | Interactive component samples, stats, workspace settings; live local clock, auto-updating date/day, time-aware greeting |
 | Component library | 16 UI components in 8 categories, search and category filters |
 | Component playground | Choose Button/Input/Badge/Card/Alert, edit labels and button style, responsive preview, copy generated JSX |
 | Design tokens | Five primary color palettes, corners, density, CSS variable preview, export JSON |
